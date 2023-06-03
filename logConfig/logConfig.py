@@ -1,23 +1,22 @@
 #!/usr/local/anaconda3/bin/python3.9
 # -*- coding: UTF-8 -*-
-# @Project name: KdSystem
+# @Project name: FaceRecognition
 # @Filename: logConfig.py
 # @Author: sxy
 # @Date: 2023-05-29 16:21
 
 import sys
 sys.path.append("/home/sxy/.conda/envs/logger/lib/python3.9/site-packages/")
-import colorlog
 
 
 level_config = {
     "logger": {
         "root": "DEBUG",
-        "KdSystem": "INFO"
+        "FaceRecognition": "INFO"
     },
     "console": {
         "root": "DEBUG",
-        "KdSystem": "INFO"
+        "FaceRecognition": "INFO"
     }
 }
 
@@ -25,7 +24,7 @@ level_config = {
 log_config = {
     "version": 1,
     "formatters": {
-        "KdSystemFormatter": {
+        "FaceRecognitionFormatter": {
             "format": "[%(asctime)s]%(name)s[%(levelname)s]: %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S"
         },
@@ -59,12 +58,12 @@ log_config = {
         "consoleHandler": {
             "class": "logging.StreamHandler",
             "level": level_config["console"]["root"],
-            "formatter": "KdSystemFormatter",
+            "formatter": "FaceRecognitionFormatter",
             "stream": "ext://sys.stdout"
         },
         "coloredHandler": {
             "class": "logging.StreamHandler",
-            "level": level_config["console"]["KdSystem"],
+            "level": level_config["console"]["FaceRecognition"],
             "formatter": "coloredFormatter",
             "stream": "ext://sys.stdout"
         }
@@ -74,8 +73,8 @@ log_config = {
         "handlers": ["coloredHandler"]
     },
     "loggers": {
-        "KdSystem": {
-            "level": level_config["logger"]["KdSystem"],
+        "FaceRecognition": {
+            "level": level_config["logger"]["FaceRecognition"],
             "propagate": 0,
             "handlers": ["coloredHandler"]
         }

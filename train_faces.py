@@ -12,11 +12,17 @@ import random
 from sklearn.model_selection import train_test_split
 
 import sys
+import logging.config
 sys.path.append("/home/sxy/.conda/envs/pytorch/lib/python3.9/site-packages/")
 sys.path.append("/home/sxy/.conda/envs/dlib/lib/python3.9/site-packages/")
 import tensorflow as tf
 
 from config import CONFIG
+from logConfig.logConfig import *
+
+
+logging.config.dictConfig(log_config)
+logger = logging.getLogger(__name__)
 
 
 def getPaddingSize(img: cv2.Mat):
@@ -191,7 +197,7 @@ def cnnTrain():
                                             )
                 summary_writer.add_summary(summary, n*num_batch+i)
                 # 打印损失
-                print(n*num_batch+i, loss)
+                logger.info(n*num_batch+i, loss)
 
                 if (n*num_batch+i) % 100 == 0:
                     # 获取测试数据的准确率
@@ -201,12 +207,12 @@ def cnnTrain():
                         keep_prob_5: 1.0,
                         keep_prob_75: 1.0
                     })
-                    print(n*num_batch+i, acc)
+                    logger.info(n*num_batch+i, acc)
                     # 准确率大于0.98时保存并退出
                     if acc > 0.98 and n > 2:
                         saver.save(sess, './train_faces.model', global_step=n*num_batch+i)
                         sys.exit(0)
-        print('accuracy less 0.98, exited!')
+        logger.info('accuracy less 0.98, exited!')
 
 
 if __name__ == '__main__':
@@ -237,7 +243,7 @@ if __name__ == '__main__':
     train_x = train_x.astype('float32') / 255.0
     test_x = test_x.astype('float32') / 255.0
 
-    print('train size:%s, test size:%s' % (len(train_x), len(test_x)))
+    logger.info('train size:%s, test size:%s' % (len(train_x), len(test_x)))
     # 图片块，每次取100张图片
     batch_size = 100
     num_batch = len(train_x) // batch_size

@@ -1,4 +1,5 @@
 .idea/
+__pycache__/
 other_faces_input/
 my_faces_dir/
 other_faces/

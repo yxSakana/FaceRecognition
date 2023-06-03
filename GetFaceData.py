@@ -5,16 +5,23 @@
 # @Author: sxy
 # @Date: 2023-06-03 20:14
 
-# from typing import
+
 import cv2
 import os
 import random
+import logging.config
 import sys
 sys.path.append("/home/sxy/.conda/envs/pytorch/lib/python3.9/site-packages/")
 sys.path.append("/home/sxy/.conda/envs/dlib/lib/python3.9/site-packages/")
 
 import dlib
+
 from config import CONFIG
+from logConfig.logConfig import *
+
+
+logging.config.dictConfig(log_config)
+logger = logging.getLogger("FaceRecognition")
 
 
 # 改变图片的亮度与对比度
@@ -39,7 +46,7 @@ def img_handle(img: cv2.Mat, index: int, is_relight: bool, output_dir: str):
     dets = detector(gray_img, 1)  # 用detector进行人脸检测
 
     for i, d in enumerate(dets):
-        print('Being processed picture %s' % index)
+        logger.info('Being processed picture %s' % index)
 
         x1 = d.top() if d.top() > 0 else 0
         y1 = d.bottom() if d.bottom() > 0 else 0
@@ -62,7 +69,7 @@ def img_handle(img: cv2.Mat, index: int, is_relight: bool, output_dir: str):
 
 
 def get_my_face():
-    print('Getting "My Face"...')
+    logger.info('Getting "My Face"...')
     index = 1
     while True:
         if index <= 1000:
@@ -74,11 +81,11 @@ def get_my_face():
             if key == 27:
                 break
 
-    print('Get "My Face" Finished!')
+    logger.info('Get "My Face" Finished!')
 
 
 def get_other_face():
-    print('Getting "Other Face"...')
+    logger.info('Getting "Other Face"...')
     index = 1
     for (path, dirnames, filenames) in os.walk(other_faces_input_dir):
         for filename in filenames:
@@ -90,7 +97,7 @@ def get_other_face():
 
                 key = cv2.waitKey(30) & 0xff
                 if key == 27:
-                    print('Get "Other Face" Finished!')
+                    logger.info('Get "Other Face" Finished!')
                     sys.exit(0)
 
 
@@ -107,8 +114,8 @@ if __name__ == '__main__':
     # check Dir
     os.makedirs(my_faces_dir) if not os.path.exists(my_faces_dir) else None
     if not os.path.exists(other_faces_input_dir):
-        print(f"No fond '{other_faces_output_dir}'")
-        raise Exception
+        logger.error(f"directory name not found '{other_faces_output_dir}'")
+        exit(-1)
     os.makedirs(other_faces_output_dir) if not os.path.exists(other_faces_output_dir) else None
 
     get_my_face()
